@@ -2,7 +2,7 @@
   "name": "beanio-vscode",
   "displayName": "beanio",
   "description": "",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "engines": {
     "vscode": "^1.63.0"
   },
@@ -11,6 +11,7 @@
   "categories": ["Other"],
   "activationEvents": ["onView:beanio", "onCommand:beanio.file-ram"],
   "main": "./extension.js",
+  "icon": "img/logo.png",
   "contributes": {
     "viewsContainers": {
       "activitybar": [
