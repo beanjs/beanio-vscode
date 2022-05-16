@@ -4,5 +4,6 @@ beanio vscode plugin
 
 ## Features
 
+- Flash Firmware
 - Connect Device
 - Down Code

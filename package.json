@@ -2,14 +2,18 @@
   "name": "beanio-vscode",
   "displayName": "beanio",
   "description": "beanio tooling for VS Code",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "engines": {
     "vscode": "^1.63.0"
   },
   "license": "MIT",
   "publisher": "beanio",
   "categories": ["Other"],
-  "activationEvents": ["onView:beanio", "onCommand:beanio.file-ram"],
+  "activationEvents": [
+    "onView:beanio",
+    "onCommand:beanio.file-ram",
+    "onCommand:beanio.flash-firmware"
+  ],
   "main": "./extension.js",
   "icon": "img/logo.png",
   "contributes": {
@@ -45,6 +49,10 @@
         "command": "beanio.file-ram",
         "title": "BeanIO: RAM",
         "enablement": "resourceExtname == .js"
+      },
+      {
+        "command": "beanio.flash-firmware",
+        "title": "BeanIO: Flasher"
       }
     ]
   },

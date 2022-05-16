@@ -46,6 +46,12 @@ function activate (context) {
       require('./src/file-ram')
     )
   )
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      'beanio.flash-firmware',
+      require('./src/flasher')
+    )
+  )
 }
 
 // this method is called when your extension is deactivated
