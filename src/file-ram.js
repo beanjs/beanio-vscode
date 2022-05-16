@@ -46,7 +46,8 @@ module.exports = async () => {
       const blkLen = parseInt(((codLen + (blkSize - 1)) / blkSize).toString())
       const proInc = 90 / blkLen
 
-      await device.request('echo(0)')
+      await asyncWrite(device, '\n')
+      await asyncWrite(device, 'echo(0)\n')
       for (let i = 0; i < blkLen; i++) {
         await asyncWrite(device, code.substring(blkSize * i, blkSize * (i + 1)))
         pro.report({ increment: proInc, message: 'transmission code' })
