@@ -4,12 +4,9 @@ const cp = require('child_process')
 const os = require('os')
 const fs = require('fs')
 const path = require('path')
+const { default: axios } = require('axios')
 
-const firmwareUrl = 'https://github.com/beanjs/beanio-firmware.git'
-const firmwareDir = path.join(os.homedir(), 'beanio-firmware')
-
-// const firmwareUrl = 'https://github.com/espruino/Espruino.git'
-// const firmwareDir = path.join(os.homedir(), 'Espruino')
+const ip138Url = 'https://2022.ip138.com/'
 
 function exec (cmd, options = {}) {
   return new Promise((resolve, reject) => {
@@ -224,11 +221,21 @@ module.exports = async () => {
     term.appendLine('BeanIO Flasher: Check git')
     await exec.call(term, 'git --version')
 
+    const firmwareDir = path.join(os.homedir(), 'beanio-firmware')
+    let firmwareUrl = 'https://github.com/beanjs/beanio-firmware.git'
+
     if (fs.existsSync(firmwareDir)) {
       term.appendLine('BeanIO Flasher: Pull firmware')
       await exec.call(term, `git pull`, { cwd: firmwareDir })
     } else {
       term.appendLine('BeanIO Flasher: Clone firmware')
+
+      const { data } = await axios.get(ip138Url)
+
+      if (data.indexOf('中国') !== -1) {
+        firmwareUrl = 'https://gitee.com/beanjs/beanio-firmware.git'
+      }
+
       await exec.call(term, `git clone ${firmwareUrl}`, { cwd: os.homedir() })
     }
 
@@ -243,15 +250,13 @@ module.exports = async () => {
     })
 
     const chip = await window.showQuickPick(chips, { title: 'Selected Chip' })
-    if (!chip) return
+    if (!chip) throw new Error('Chip is undefined')
 
     const port = await window.showQuickPick(ports, { title: 'Selected Device' })
-    if (!port) return
+    if (!port) throw new Error('Port is undefined')
 
     const factory = flashFactory[chip]
-    if (!factory) {
-      throw new Error('This chip is not supported')
-    }
+    if (!factory) throw new Error('This chip is not supported')
 
     term.appendLine(`BeanIO Flasher: Firmware ${chip}`)
     await factory.call(term, port, path.join(firmwareDir, chip))
