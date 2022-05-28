@@ -2,7 +2,7 @@
   "name": "beanio-vscode",
   "displayName": "beanio",
   "description": "beanio tooling for VS Code",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "engines": {
     "vscode": "^1.63.0"
   },
@@ -30,7 +30,7 @@
       "sidebar": [
         {
           "id": "beanio",
-          "name": "BeanIO"
+          "name": ""
         }
       ]
     },
@@ -41,6 +41,12 @@
           "alt": "beanio.file-ram",
           "group": "beanio",
           "when": "resourceExtname == .js"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "beanio.reload-device",
+          "group": "navigation"
         }
       ]
     },
@@ -53,6 +59,11 @@
       {
         "command": "beanio.flash-firmware",
         "title": "BeanIO: Flasher"
+      },
+      {
+        "command": "beanio.reload-device",
+        "title": "Refresh",
+        "icon": "$(refresh)"
       }
     ]
   },
@@ -76,5 +87,9 @@
     "@babel/core": "^7.17.10",
     "axios": "^0.27.2",
     "serialport": "^10.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/beanjs/beanio-vscode"
   }
 }

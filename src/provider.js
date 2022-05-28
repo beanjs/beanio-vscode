@@ -1,10 +1,19 @@
-const { TreeItem, TreeItemCollapsibleState } = require('vscode')
+const { TreeItem, TreeItemCollapsibleState, EventEmitter } = require('vscode')
 const { SerialPort } = require('serialport')
 const SerialDevice = require('./serial-device')
 
 class Provider {
   constructor () {
     this.terminals = []
+    this._onDidChangeTreeData = new EventEmitter()
+  }
+
+  get onDidChangeTreeData () {
+    return this._onDidChangeTreeData.event
+  }
+
+  refresh () {
+    this._onDidChangeTreeData.fire()
   }
 
   getTreeItem (item) {

@@ -52,6 +52,11 @@ function activate (context) {
       require('./src/flasher')
     )
   )
+  context.subscriptions.push(
+    vscode.commands.registerCommand('beanio.reload-device', () => {
+      deviceProvider.refresh()
+    })
+  )
 }
 
 // this method is called when your extension is deactivated
