@@ -249,10 +249,10 @@ module.exports = async () => {
       return p.filter(v => v.serialNumber).map(v => v.path)
     })
 
-    const chip = await window.showQuickPick(chips, { title: 'Selected Chip' })
+    const chip = await window.showQuickPick(chips, { title: 'Select Chip' })
     if (!chip) throw new Error('Chip is undefined')
 
-    const port = await window.showQuickPick(ports, { title: 'Selected Device' })
+    const port = await window.showQuickPick(ports, { title: 'Select Port' })
     if (!port) throw new Error('Port is undefined')
 
     const factory = flashFactory[chip]
