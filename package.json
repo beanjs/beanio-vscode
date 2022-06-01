@@ -2,7 +2,7 @@
   "name": "beanio-vscode",
   "displayName": "beanio",
   "description": "beanio tooling for VS Code",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "engines": {
     "vscode": "^1.63.0"
   },
@@ -12,6 +12,7 @@
   "activationEvents": [
     "onView:beanio",
     "onCommand:beanio.file-ram",
+    "onCommand:beanio.file-compact",
     "onCommand:beanio.flash-firmware"
   ],
   "main": "./extension.js",
@@ -41,6 +42,12 @@
           "alt": "beanio.file-ram",
           "group": "beanio",
           "when": "resourceExtname == .js"
+        },
+        {
+          "command": "beanio.file-compact",
+          "alt": "beanio.file-compact",
+          "group": "beanio",
+          "when": "resourceExtname == .js"
         }
       ],
       "view/title": [
@@ -54,6 +61,11 @@
       {
         "command": "beanio.file-ram",
         "title": "BeanIO: RAM",
+        "enablement": "resourceExtname == .js"
+      },
+      {
+        "command": "beanio.file-compact",
+        "title": "BeanIO: Compact",
         "enablement": "resourceExtname == .js"
       },
       {

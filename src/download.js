@@ -12,7 +12,7 @@ function asyncWrite (dev, val) {
   return delay()
 }
 
-module.exports = async () => {
+module.exports = async (opts) => {
   const term = window.activeTerminal
   if (!term || term.name.indexOf('BeanIO: ') !== 0) {
     window.showErrorMessage('not beanio terminal')
@@ -24,9 +24,7 @@ module.exports = async () => {
     return
   }
 
-  const { code } = transformSync(doc.getText(), {
-    comments: false
-  })
+  const { code } = transformSync(doc.getText(),opts)
 
   window.withProgress(
     {
@@ -39,6 +37,7 @@ module.exports = async () => {
 
       pro.report({ increment: 0, message: 'reset device' })
       await device.request('reset()')
+      await asyncWrite(device, '\n')
       pro.report({ increment: 10, message: 'transmission code' })
 
       const blkSize = 32

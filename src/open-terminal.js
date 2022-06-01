@@ -14,7 +14,9 @@ module.exports = async device => {
         const writeEmitter = new EventEmitter()
         const pty = {
           onDidWrite: writeEmitter.event,
-          open () {},
+          open () {
+            dev.write("\n")
+          },
           close () {
             dev.close()
           },
