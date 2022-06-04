@@ -2,7 +2,7 @@
   "name": "beanio-vscode",
   "displayName": "beanio",
   "description": "beanio tooling for VS Code",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "engines": {
     "vscode": "^1.63.0"
   },
@@ -53,6 +53,7 @@
       "view/title": [
         {
           "command": "beanio.reload-device",
+          "when": "view == beanio",
           "group": "navigation"
         }
       ]
@@ -74,7 +75,7 @@
       },
       {
         "command": "beanio.reload-device",
-        "title": "Refresh",
+        "title": "Reload",
         "icon": "$(refresh)"
       }
     ]
