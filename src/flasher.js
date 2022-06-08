@@ -261,7 +261,8 @@ module.exports = async () => {
     term.appendLine(`BeanIO Flasher: Firmware ${chip}`)
     await factory.call(term, port, path.join(firmwareDir, chip))
   } catch (e) {
-    window.showErrorMessage(e.message)
+    const err = e || new Error('unknow error')
+    window.showErrorMessage(err.message)
   }
   term.appendLine('BeanIO Flasher: All Done')
 }

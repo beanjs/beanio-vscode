@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode')
 const DeviceProvider = require('./src/provider')
-const download = require('./src/download')
+const { downloadCode, installModule } = require('./src/download')
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -42,14 +42,10 @@ function activate (context) {
     )
   )
   context.subscriptions.push(
-    vscode.commands.registerCommand('beanio.file-ram', () =>
-      download({ comments: false })
-    )
+    vscode.commands.registerCommand('beanio.download-code', downloadCode)
   )
   context.subscriptions.push(
-    vscode.commands.registerCommand('beanio.file-compact', () =>
-      download({ comments: false, compact: true })
-    )
+    vscode.commands.registerCommand('beanio.install-module', installModule)
   )
   context.subscriptions.push(
     vscode.commands.registerCommand(

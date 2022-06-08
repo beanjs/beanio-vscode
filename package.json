@@ -2,17 +2,19 @@
   "name": "beanio-vscode",
   "displayName": "beanio",
   "description": "beanio tooling for VS Code",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "engines": {
     "vscode": "^1.63.0"
   },
   "license": "MIT",
   "publisher": "beanio",
-  "categories": ["Other"],
+  "categories": [
+    "Other"
+  ],
   "activationEvents": [
     "onView:beanio",
-    "onCommand:beanio.file-ram",
-    "onCommand:beanio.file-compact",
+    "onCommand:beanio.download-code",
+    "onCommand:beanio.install-module",
     "onCommand:beanio.flash-firmware"
   ],
   "main": "./extension.js",
@@ -38,14 +40,14 @@
     "menus": {
       "editor/context": [
         {
-          "command": "beanio.file-ram",
-          "alt": "beanio.file-ram",
+          "command": "beanio.download-code",
+          "alt": "beanio.download-code",
           "group": "beanio",
           "when": "resourceExtname == .js"
         },
         {
-          "command": "beanio.file-compact",
-          "alt": "beanio.file-compact",
+          "command": "beanio.install-module",
+          "alt": "beanio.install-module",
           "group": "beanio",
           "when": "resourceExtname == .js"
         }
@@ -60,13 +62,13 @@
     },
     "commands": [
       {
-        "command": "beanio.file-ram",
-        "title": "BeanIO: RAM",
+        "command": "beanio.download-code",
+        "title": "BeanIO: Download Code",
         "enablement": "resourceExtname == .js"
       },
       {
-        "command": "beanio.file-compact",
-        "title": "BeanIO: Compact",
+        "command": "beanio.install-module",
+        "title": "BeanIO: Install Module",
         "enablement": "resourceExtname == .js"
       },
       {
@@ -99,6 +101,9 @@
   "dependencies": {
     "@babel/core": "^7.17.10",
     "axios": "^0.27.2",
+    "escodegen": "^2.0.0",
+    "esmangle": "^1.0.1",
+    "esprima": "^4.0.1",
     "serialport": "^10.4.0"
   },
   "repository": {
