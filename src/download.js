@@ -185,7 +185,7 @@ async function installModule () {
   }
 
   const { code } = transformSync(doc.getText(), { comments: false })
-  const dirname = path.dirname(doc.uri.path)
+  const dirname = path.dirname(doc.fileName)
   const modules = parseModules(code)
 
   window.withProgress(
