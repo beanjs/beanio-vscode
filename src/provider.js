@@ -1,6 +1,6 @@
 const { TreeItem, TreeItemCollapsibleState, EventEmitter } = require('vscode')
 const { SerialPort } = require('serialport')
-const SerialDevice = require('./serial-device')
+const { SerialDevice } = require('./device')
 
 class Provider {
   constructor () {

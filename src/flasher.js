@@ -41,7 +41,7 @@ function exec (cmd, options = {}) {
 
     spawn.on('close', code => {
       if (code == 0) resolve()
-      else reject()
+      else reject(new Error(`spawn error: ${code}`))
     })
   })
 }
@@ -261,8 +261,7 @@ module.exports = async () => {
     term.appendLine(`BeanIO Flasher: Firmware ${chip}`)
     await factory.call(term, port, path.join(firmwareDir, chip))
   } catch (e) {
-    const err = e || new Error('unknow error')
-    window.showErrorMessage(err.message)
+    window.showErrorMessage(e.message)
   }
   term.appendLine('BeanIO Flasher: All Done')
 }

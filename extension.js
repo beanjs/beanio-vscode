@@ -38,7 +38,7 @@ function activate (context) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       'beanio.open-terminal',
-      require('./src/open-terminal')
+      require('./src/terminal')
     )
   )
   context.subscriptions.push(
