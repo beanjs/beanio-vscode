@@ -246,7 +246,7 @@ module.exports = async () => {
       .map(v => v.name)
 
     const ports = await SerialPort.list().then(p => {
-      return p.filter(v => v.serialNumber).map(v => v.path)
+      return p.filter(v => v.manufacturer).map(v => v.path)
     })
 
     const chip = await window.showQuickPick(chips, { title: 'Select Chip' })

@@ -27,7 +27,7 @@ class Provider {
       childs.push(new TreeItem('DEVICES', TreeItemCollapsibleState.Collapsed))
     } else if (item.label == 'DEVICES') {
       const serialports = await SerialPort.list().then(ports => {
-        return ports.filter(p => p.serialNumber)
+        return ports.filter(p => p.manufacturer)
       })
 
       for (const port of serialports) {

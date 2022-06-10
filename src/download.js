@@ -7,9 +7,9 @@ const esprima = require('esprima')
 const esmangle = require('esmangle')
 const escodegen = require('escodegen')
 
-function delay () {
+function delay (timeout) {
   return new Promise(resolve => {
-    setTimeout(resolve, 200)
+    setTimeout(resolve, timeout || 100)
   })
 }
 
@@ -46,25 +46,29 @@ function asyncWrite (dev, val) {
 }
 
 function parseModules (code) {
-  const builtIn = ['Storage', 'heatshrink', 'beanio']
+  try {
+    const builtIn = ['Storage', 'heatshrink', 'beanio']
 
-  const modules = code
-    .match(/require\('\w+'\)|require\("\w+"\)/g)
-    .map(v =>
-      v
-        .replace(/require\(/g, '')
-        .replace(/\)/g, '')
-        .replace(/'/g, '')
-        .replace(/"/g, '')
-    )
-    .filter(m => !builtIn.includes(m))
+    const modules = code
+      .match(/require\('\w+'\)|require\("\w+"\)/g)
+      .map(v =>
+        v
+          .replace(/require\(/g, '')
+          .replace(/\)/g, '')
+          .replace(/'/g, '')
+          .replace(/"/g, '')
+      )
+      .filter(m => !builtIn.includes(m))
 
-  const mobj = {}
-  for (const m of modules) {
-    mobj[m] = true
+    const mobj = {}
+    for (const m of modules) {
+      mobj[m] = true
+    }
+
+    return Object.keys(mobj)
+  } catch (e) {
+    return []
   }
-
-  return Object.keys(mobj)
 }
 
 async function downloadCode () {
@@ -88,19 +92,9 @@ async function downloadCode () {
     for (const m of modules) {
       const mCode = fs.readFileSync(path.join(dirname, `${m}.js`)).toString()
       moduleMiniCode[m] = minify(mCode)
-      // const { code } = transformSync(
-      //   fs.readFileSync(path.join(dirname, `${m}.js`)).toString(),
-      //   {
-      //     comments: false,
-      //     // compact: true,
-      //     presets: [require('babel-preset-minify')]
-      //   }
-      // )
-      // moduleMiniCode[m] = code
     }
   } catch (e) {
-    const err = e || new Error('unknow error')
-    window.showErrorMessage(err.message)
+    window.showErrorMessage(e.message)
     return
   }
 
@@ -125,10 +119,12 @@ async function downloadCode () {
         for (const m of modules) {
           evalCode = `require('Storage').erase('${m}')\n`
           await asyncWrite(device, evalCode)
+          await delay(1000)
         }
 
         evalCode = `require('Storage').compact()\n`
         await asyncWrite(device, evalCode)
+        await delay(1000)
         pro.report({ increment: 10, message: 'erase done' })
 
         const proInc = 40 / modules.length
@@ -136,7 +132,6 @@ async function downloadCode () {
           pro.report({ increment: 0, message: m })
 
           const mCode = moduleMiniCode[m]
-          // console.log(mCode)
           const blkLen = parseInt(
             ((mCode.length + (blkSize - 1)) / blkSize).toString()
           )
@@ -147,7 +142,6 @@ async function downloadCode () {
 
             evalCode = `require('Storage').write('${m}','${blkCode}',${blkSize *
               i},${mCode.length})\n`
-            // console.log(evalCode)
             await asyncWrite(device, evalCode)
             pro.report({
               increment: proInc / blkLen,
@@ -206,10 +200,7 @@ async function installModule () {
         const data = await axios
           .get(`http://www.beanjs.com/beanio/modules/${m}.js`)
           .then(v => v.data)
-          .catch(e => {
-            console.log(e)
-            return ''
-          })
+          .catch(() => '')
 
         if (data == '') {
           window.showErrorMessage(`not found ${m} module`)
