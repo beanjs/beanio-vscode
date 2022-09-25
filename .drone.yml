@@ -3,7 +3,7 @@ type: docker
 name: default
 
 steps:
-  - name: build image
+  - name: publish extension to vscode marketplace
     image: node:16-alpine
     environment:
       ACCESS_TOKEN:
