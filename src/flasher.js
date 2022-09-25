@@ -46,7 +46,7 @@ function exec (cmd, options = {}) {
   })
 }
 
-async function pythonShell () {
+async function pythonExcutor () {
   if (process.platform == 'win32') {
     return 'python'
   }
@@ -54,21 +54,42 @@ async function pythonShell () {
   return 'python3'
 }
 
-async function wmToolBuild (cwd) {
+async function wmToolExcutor (opts) {
   if (process.platform == 'win32') {
     return './wm_tool.exe'
   }
 
-  await exec.call(this, 'gcc ./wm_tool.c -lpthread -o ./wm_tool', { cwd })
+  await exec.call(this, 'gcc ./wm_tool.c -lpthread -o ./wm_tool', opts)
   return './wm_tool'
 }
 
+async function selectSerialPort () {
+  const ports = await SerialPort.list().then(p => {
+    return p.filter(v => v.manufacturer).map(v => v.path)
+  })
+
+  const port = await window.showQuickPick(ports, { title: 'Select Port' })
+  if (!port) throw new Error('Port is undefined')
+  return port
+}
+
 const flashFactory = {
-  async esp32 (port, cwd) {
-    await exec.call(
-      this,
-      [
-        await pythonShell(),
+  air724: {
+    getExcutor: pythonExcutor,
+    getParams: async () => {
+      return [
+        './down.py',
+        '0x838000 ./fdl1.img',
+        '0x810000 ./fdl2.img',
+        '0x60180000 ./Air720U_V302340_CSDK_beanio.img'
+      ]
+    }
+  },
+  esp32: {
+    getExcutor: pythonExcutor,
+    getParams: async () => {
+      const port = await selectSerialPort()
+      return [
         './esptool.py',
         `--port ${port}`,
         '--baud 460800',
@@ -82,15 +103,14 @@ const flashFactory = {
         '0x1000 ./bootloader.bin',
         '0x8000 ./partition-table.bin',
         '0x10000 ./beanio.bin'
-      ],
-      { cwd }
-    )
+      ]
+    }
   },
-  async esp32c3 (port, cwd) {
-    await exec.call(
-      this,
-      [
-        await pythonShell(),
+  esp32c3: {
+    getExcutor: pythonExcutor,
+    getParams: async () => {
+      const port = await selectSerialPort()
+      return [
         './esptool.py',
         `--port ${port}`,
         '--baud 460800',
@@ -104,15 +124,14 @@ const flashFactory = {
         '0x1000 ./bootloader.bin',
         '0x8000 ./partition-table.bin',
         '0x10000 ./beanio.bin'
-      ],
-      { cwd }
-    )
+      ]
+    }
   },
-  async esp32s2 (port, cwd) {
-    await exec.call(
-      this,
-      [
-        await pythonShell(),
+  esp32s2: {
+    getExcutor: pythonExcutor,
+    getParams: async () => {
+      const port = await selectSerialPort()
+      return [
         './esptool.py',
         `--port ${port}`,
         '--baud 460800',
@@ -126,15 +145,14 @@ const flashFactory = {
         '0x1000 ./bootloader.bin',
         '0x8000 ./partition-table.bin',
         '0x10000 ./beanio.bin'
-      ],
-      { cwd }
-    )
+      ]
+    }
   },
-  async esp32s3 (port, cwd) {
-    await exec.call(
-      this,
-      [
-        await pythonShell(),
+  esp32s3: {
+    getExcutor: pythonExcutor,
+    getParams: async () => {
+      const port = await selectSerialPort()
+      return [
         './esptool.py',
         `--port ${port}`,
         '--baud 460800',
@@ -148,15 +166,14 @@ const flashFactory = {
         '0x1000 ./bootloader.bin',
         '0x8000 ./partition-table.bin',
         '0x10000 ./beanio.bin'
-      ],
-      { cwd }
-    )
+      ]
+    }
   },
-  async esp8266 (port, cwd) {
-    await exec.call(
-      this,
-      [
-        await pythonShell(),
+  esp8266: {
+    getExcutor: pythonExcutor,
+    getParams: async () => {
+      const port = await selectSerialPort()
+      return [
         './esptool.py',
         `--port ${port}`,
         '--baud 460800',
@@ -168,47 +185,36 @@ const flashFactory = {
         '0x1000 "./beanio_esp8266_user1.bin"',
         '0xFC000  "./esp_init_data_default.bin"',
         '0xFE000 "./blank.bin"'
-      ],
-      { cwd }
-    )
+      ]
+    }
   },
-  async w800 (port, cwd) {
-    await exec.call(
-      this,
-      [
-        await wmToolBuild.call(this, cwd),
-        `-c ${port}`,
-        '-dl ./beanio_w800.fls',
-        '-rs rts'
-      ],
-      { cwd }
-    )
+  w800: {
+    getExcutor: wmToolExcutor,
+    getParams: async () => {
+      const port = await selectSerialPort()
+      return [`-c ${port}`, '-dl ./beanio_w800.fls', '-rs rts']
+    }
   },
-  async w801 (port, cwd) {
-    await exec.call(
-      this,
-      [
-        await wmToolBuild.call(this, cwd),
-        `-c ${port}`,
-        '-dl ./beanio_w801.fls',
-        '-rs rts'
-      ],
-      { cwd }
-    )
+  w801: {
+    getExcutor: wmToolExcutor,
+    getParams: async () => {
+      const port = await selectSerialPort()
+      return [`-c ${port}`, '-dl ./beanio_w801.fls', '-rs rts']
+    }
   },
-  async w600 (port, cwd) {
-    await exec.call(
-      this,
-      [await pythonShell(), `./download.py`, port, './beanio_w600.fls'],
-      { cwd }
-    )
+  w600: {
+    getExcutor: pythonExcutor,
+    getParams: async () => {
+      const port = await selectSerialPort()
+      return ['./download.py', port, './beanio_w600.fls']
+    }
   },
-  async w601 (port, cwd) {
-    await exec.call(
-      this,
-      [await pythonShell(), `./download.py`, port, './beanio_w601.fls'],
-      { cwd }
-    )
+  w601: {
+    getExcutor: pythonExcutor,
+    getParams: async () => {
+      const port = await selectSerialPort()
+      return ['./download.py', port, './beanio_w601.fls']
+    }
   }
 }
 
@@ -245,21 +251,21 @@ module.exports = async () => {
       .filter(v => v.name !== '.git' && v.name !== 'linux')
       .map(v => v.name)
 
-    const ports = await SerialPort.list().then(p => {
-      return p.filter(v => v.manufacturer).map(v => v.path)
-    })
-
     const chip = await window.showQuickPick(chips, { title: 'Select Chip' })
     if (!chip) throw new Error('Chip is undefined')
 
-    const port = await window.showQuickPick(ports, { title: 'Select Port' })
-    if (!port) throw new Error('Port is undefined')
+    const flashOption = flashFactory[chip]
+    if (!flashOption) throw new Error('This chip is not supported')
 
-    const factory = flashFactory[chip]
-    if (!factory) throw new Error('This chip is not supported')
+    const params = await flashOption.getParams()
+    const excutor = await flashOption.getExcutor({
+      cwd: path.join(firmwareDir, chip)
+    })
 
     term.appendLine(`BeanIO Flasher: Firmware ${chip}`)
-    await factory.call(term, port, path.join(firmwareDir, chip))
+    await exec.call(term, [excutor, ...params], {
+      cwd: path.join(firmwareDir, chip)
+    })
   } catch (e) {
     window.showErrorMessage(e.message)
   }

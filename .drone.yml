@@ -1,0 +1,16 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: build image
+    image: node:16-alpine
+    environment:
+      ACCESS_TOKEN:
+        from_secret: azure_token
+    commands:
+      - apk add python3
+      - yarn global add vsce --registry https://registry.npm.taobao.org/
+      - yarn install --registry https://registry.npm.taobao.org/
+      - vsce package --no-yarn
+      - vsce publish --no-yarn --pat $ACCESS_TOKEN
