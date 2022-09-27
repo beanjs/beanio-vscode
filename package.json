@@ -2,7 +2,7 @@
   "name": "beanio-vscode",
   "displayName": "beanio",
   "description": "beanio tooling for VS Code",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "engines": {
     "vscode": "^1.63.0"
   },
