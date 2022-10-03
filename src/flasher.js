@@ -74,6 +74,18 @@ async function selectSerialPort () {
 }
 
 const flashFactory = {
+  qs100:{
+    getExcutor: pythonExcutor,
+    getParams: async () => {
+      // python3 zos.py -mdl /dev/ttyUSB0
+      const port = await selectSerialPort()
+      return [
+        './zos.py',
+        '-mdl',
+        port
+      ]
+    }
+  },
   air724: {
     getExcutor: pythonExcutor,
     getParams: async () => {
