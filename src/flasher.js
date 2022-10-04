@@ -139,6 +139,27 @@ const flashFactory = {
       ]
     }
   },
+  "esp32c3-usb": {
+    getExcutor: pythonExcutor,
+    getParams: async () => {
+      const port = await selectSerialPort()
+      return [
+        './esptool.py',
+        `--port ${port}`,
+        '--baud 460800',
+        '--before default_reset',
+        '--after hard_reset',
+        '--chip esp32c3',
+        'write_flash',
+        '--flash_mode dio',
+        '--flash_size detect',
+        '--flash_freq 40m',
+        '0x0000 ./bootloader.bin',
+        '0x8000 ./partition-table.bin',
+        '0x10000 ./beanio.bin'
+      ]
+    }
+  },
   esp32s2: {
     getExcutor: pythonExcutor,
     getParams: async () => {
