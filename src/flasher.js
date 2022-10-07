@@ -65,7 +65,7 @@ async function wmToolExcutor (opts) {
 
 async function selectSerialPort () {
   const ports = await SerialPort.list().then(p => {
-    return p.filter(v => v.manufacturer).map(v => v.path)
+    return p.filter(v => v.manufacturer && v.vendorId).map(v => v.path)
   })
 
   const port = await window.showQuickPick(ports, { title: 'Select Port' })
@@ -74,16 +74,12 @@ async function selectSerialPort () {
 }
 
 const flashFactory = {
-  qs100:{
+  qs100: {
     getExcutor: pythonExcutor,
     getParams: async () => {
       // python3 zos.py -mdl /dev/ttyUSB0
       const port = await selectSerialPort()
-      return [
-        './zos.py',
-        '-mdl',
-        port
-      ]
+      return ['./zos.py', '-mdl', port]
     }
   },
   air724: {
@@ -139,7 +135,7 @@ const flashFactory = {
       ]
     }
   },
-  "esp32c3-usb": {
+  'esp32c3-usb': {
     getExcutor: pythonExcutor,
     getParams: async () => {
       const port = await selectSerialPort()
