@@ -6,6 +6,7 @@ const fs = require('fs')
 const esprima = require('esprima')
 const esmangle = require('esmangle')
 const escodegen = require('escodegen')
+const dotenv = require('dotenv')
 
 function delay (timeout) {
   return new Promise(resolve => {
@@ -72,6 +73,7 @@ function parseModules (code) {
 }
 
 async function downloadCode () {
+  // console.log(window.activeTextEditor.document)
   const term = window.activeTerminal
   if (!term || term.name.indexOf('BeanIO: ') !== 0) {
     window.showErrorMessage('not beanio terminal')
@@ -155,6 +157,21 @@ async function downloadCode () {
         pro.report({ increment: 50, message: '' })
       }
 
+      // sync .env context
+      const envPath = path.join(path.dirname(doc.fileName), '.env')
+      if (fs.existsSync(envPath)) {
+        const envObj = dotenv.parse(fs.readFileSync(envPath))
+        const envKeys = Object.keys(envObj)
+
+        for (const envKey of envKeys) {
+          const envVal = envObj[envKey]
+          evalCode = `process.${envKey}='${envVal}'\n`
+          
+          await asyncWrite(device, evalCode)
+          await delay(100)
+        }
+      }
+
       const blkLen = parseInt(
         ((code.length + (blkSize - 1)) / blkSize).toString()
       )
@@ -172,7 +189,7 @@ async function downloadCode () {
   )
 }
 
-async function installModule () {
+async function downloadModules () {
   const doc = window.activeTextEditor.document
   if (doc.languageId !== 'javascript') {
     return
@@ -217,5 +234,5 @@ async function installModule () {
 
 module.exports = {
   downloadCode,
-  installModule
+  downloadModules
 }

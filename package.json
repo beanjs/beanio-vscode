@@ -2,7 +2,7 @@
   "name": "beanio-vscode",
   "displayName": "beanio",
   "description": "beanio tooling for VS Code",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "engines": {
     "vscode": "^1.63.0"
   },
@@ -14,7 +14,7 @@
   "activationEvents": [
     "onView:beanio",
     "onCommand:beanio.download-code",
-    "onCommand:beanio.install-module",
+    "onCommand:beanio.download-module",
     "onCommand:beanio.flash-firmware"
   ],
   "main": "./extension.js",
@@ -46,8 +46,8 @@
           "when": "resourceExtname == .js"
         },
         {
-          "command": "beanio.install-module",
-          "alt": "beanio.install-module",
+          "command": "beanio.download-module",
+          "alt": "beanio.download-module",
           "group": "beanio",
           "when": "resourceExtname == .js"
         }
@@ -67,8 +67,8 @@
         "enablement": "resourceExtname == .js"
       },
       {
-        "command": "beanio.install-module",
-        "title": "BeanIO: Install Module",
+        "command": "beanio.download-module",
+        "title": "BeanIO: Download Module",
         "enablement": "resourceExtname == .js"
       },
       {
@@ -101,6 +101,7 @@
   "dependencies": {
     "@babel/core": "^7.17.10",
     "axios": "^0.27.2",
+    "dotenv": "^16.0.3",
     "escodegen": "^2.0.0",
     "esmangle": "^1.0.1",
     "esprima": "^4.0.1",
