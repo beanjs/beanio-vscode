@@ -165,7 +165,7 @@ async function downloadCode () {
 
         for (const envKey of envKeys) {
           const envVal = envObj[envKey]
-          evalCode = `process.${envKey}='${envVal}'\n`
+          evalCode = `ENV_${envKey}='${envVal}'\n`
           
           await asyncWrite(device, evalCode)
           await delay(100)

@@ -14,4 +14,4 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Fix ESP32C3,ESP32S3 flasher error
 - Add QS100 chip flasher
 - Add ESP32C3-USB chip flasher
-- Add .env Support
+- Add .env Support,prefix with ENV_
