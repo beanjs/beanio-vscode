@@ -15,3 +15,4 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Add QS100 chip flasher
 - Add ESP32C3-USB chip flasher
 - Add .env Support,prefix with ENV_
+- Add EC618 chip flasher (Air780)

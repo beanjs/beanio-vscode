@@ -51,6 +51,10 @@ async function pythonExcutor () {
     return 'python'
   }
 
+  if (process.platform == 'darwin') {
+    return 'python3'
+  }
+
   return 'python3'
 }
 
@@ -90,6 +94,18 @@ const flashFactory = {
         '0x838000 ./fdl1.img',
         '0x810000 ./fdl2.img',
         '0x60180000 ./Air720U_V302340_CSDK_beanio.img'
+      ]
+    }
+  },
+  air780: {
+    getExcutor: pythonExcutor,
+    getParams: async () => {
+      return [
+        './downloader.py',
+        './agentboot.bin',
+        './ap_bootloader.bin',
+        './ap_flash.bin',
+        './cp-demo-flash.bin'
       ]
     }
   },
