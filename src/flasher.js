@@ -97,7 +97,19 @@ const flashFactory = {
       ]
     }
   },
-  air780: {
+  // air780: {
+  //   getExcutor: pythonExcutor,
+  //   getParams: async () => {
+  //     return [
+  //       './downloader.py',
+  //       './agentboot.bin',
+  //       './ap_bootloader.bin',
+  //       './ap_flash.bin',
+  //       './cp-demo-flash.bin'
+  //     ]
+  //   }
+  // },
+  'air780-usb': {
     getExcutor: pythonExcutor,
     getParams: async () => {
       return [
