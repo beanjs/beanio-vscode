@@ -86,7 +86,7 @@ const flashFactory = {
       return ['./zos.py', '-mdl', port]
     }
   },
-  air724: {
+  'air724-usb': {
     getExcutor: pythonExcutor,
     getParams: async () => {
       return [
